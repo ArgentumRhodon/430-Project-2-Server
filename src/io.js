@@ -3,11 +3,11 @@ const { Server } = require("socket.io");
 
 let io;
 
-const handleChatMessage = (socket, msg) => {
+const handleChatMessage = (socket, message, from) => {
   socket.rooms.forEach((room) => {
     if (room === socket.id) return;
 
-    io.to(room).emit("message", msg);
+    io.to(room).emit("message", { message, from });
   });
 };
 
@@ -34,7 +34,9 @@ const socketSetup = (app) => {
       console.log("A user disconnected.");
     });
 
-    socket.on("message", (msg) => handleChatMessage(socket, msg));
+    socket.on("message", ({ message, from }) =>
+      handleChatMessage(socket, message, from)
+    );
     socket.on("room change", (room) => handleRoomChange(socket, room));
   });
 
