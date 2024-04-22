@@ -23,7 +23,7 @@ const handleRoomChange = (socket, roomName) => {
   socket.join(roomName);
 };
 
-const socketSetup = (app, session) => {
+const socketSetup = (app) => {
   const server = http.createServer(app);
   io = new Server(server);
 
@@ -38,8 +38,6 @@ const socketSetup = (app, session) => {
     socket.on("send message", (message) => handleChatMessage(socket, message));
     socket.on("room change", (room) => handleRoomChange(socket, room));
   });
-
-  io.engine.use(session);
 
   return server;
 };

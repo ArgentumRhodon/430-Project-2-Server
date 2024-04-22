@@ -8,7 +8,6 @@ const redis = require("redis");
 const helmet = require("helmet");
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
-const cors = require("cors");
 
 const router = require("./router.js");
 const socketSetup = require("./io.js");
@@ -31,7 +30,6 @@ redisClient.connect().then(() => {
 
   // app.use("/assets", express.static(path.resolve(`${__dirname}/../hosted/`)));
 
-  app.use(cors());
   app.use(helmet());
   app.use(compression());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,9 +44,10 @@ redisClient.connect().then(() => {
     resave: false,
     saveUninitialized: false,
   });
-
   app.use(sessionMiddleware);
+
   router(app);
+
   const server = socketSetup(app, sessionMiddleware);
 
   server.listen(port, (err) => {

@@ -23,8 +23,9 @@ const login = (req, res) => {
     }
 
     req.session.account = Account.toAPI(account);
+    console.log(req.session);
 
-    return res.json(req.session.account);
+    return res.json({ message: "Successful Login" });
   });
 };
 
@@ -42,7 +43,8 @@ const signup = async (req, res) => {
     const newAccount = new Account({ email, username, password: hash });
     await newAccount.save();
     req.session.account = Account.toAPI(newAccount);
-    return res.json(req.session.account);
+    console.log(req.session);
+    return res.json({ message: "Successful Signup" });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -52,9 +54,21 @@ const signup = async (req, res) => {
   }
 };
 
+const user = (req, res) => {
+  try {
+    const user = req.session.account;
+    console.log(req.session);
+    return res.json({ user });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Error retrieving user!" });
+  }
+};
+
 module.exports = {
   loginPage,
   login,
   logout,
   signup,
+  user,
 };
