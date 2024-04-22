@@ -24,7 +24,7 @@ const login = (req, res) => {
 
     req.session.account = Account.toAPI(account);
 
-    return res.json({ loggedIn: true });
+    return res.json(req.session.account);
   });
 };
 
@@ -42,7 +42,7 @@ const signup = async (req, res) => {
     const newAccount = new Account({ email, username, password: hash });
     await newAccount.save();
     req.session.account = Account.toAPI(newAccount);
-    return res.json({ loggedIn: true });
+    return res.json(req.session.account);
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
