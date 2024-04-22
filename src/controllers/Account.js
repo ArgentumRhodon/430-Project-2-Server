@@ -6,7 +6,7 @@ const loginPage = (req, res) => res.render("login");
 
 const logout = (req, res) => {
   req.session.destroy();
-  res.redirect("/");
+  res.json({ loggedOut: true });
 };
 
 const login = (req, res) => {
@@ -24,7 +24,7 @@ const login = (req, res) => {
 
     req.session.account = Account.toAPI(account);
 
-    // return res.json({ redirect: "/maker" });
+    return res.json({ loggedIn: true });
   });
 };
 
@@ -42,7 +42,7 @@ const signup = async (req, res) => {
     const newAccount = new Account({ email, username, password: hash });
     await newAccount.save();
     req.session.account = Account.toAPI(newAccount);
-    // return res.json({ redirect: "/maker" });
+    return res.json({ loggedIn: true });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
